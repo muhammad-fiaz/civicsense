@@ -220,8 +220,8 @@ CIVICSENSE_AI_CONFIDENCE_THRESHOLD=0.15
 
 ## Requirements
 
-- Python 3.10+
-- UV package manager
+- **Python 3.10 or later** — [Download Python](https://www.python.org/downloads/)
+- **UV package manager** — [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
 - Camera (for live detection)
 - GPU recommended (CUDA support via PyTorch)
 
