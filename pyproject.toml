@@ -1,0 +1,106 @@
+[project]
+name = "civicsense"
+version = "0.1.0"
+description = "AI-powered littering detection platform for municipal monitoring"
+readme = "README.md"
+license = "GPL-3.0-only"
+requires-python = ">=3.10"
+authors = [
+    { name = "Muhammad Fiaz", email = "contact@muhammadfiaz.com" },
+]
+keywords = ["littering", "detection", "yolo", "computer-vision", "municipal", "ai", "waste"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+    "ultralytics>=8.3.0",
+    "opencv-python>=4.8.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "loguru>=0.7.0",
+    "rich>=13.0.0",
+    "Pillow>=10.0.0",
+    "numpy>=1.24.0",
+    "tqdm>=4.66.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "python-multipart>=0.0.6",
+    "PySide6>=6.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.23.0",
+    "coverage>=7.3.0",
+    "ruff>=0.4.0",
+    "mypy>=1.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/muhammad-fiaz/civicsense"
+Documentation = "https://github.com/muhammad-fiaz/civicsense#readme"
+Repository = "https://github.com/muhammad-fiaz/civicsense"
+Issues = "https://github.com/muhammad-fiaz/civicsense/issues"
+Author = "https://muhammadfiaz.com"
+
+[project.scripts]
+civicsense = "launch:main"
+
+[build-system]
+requires = ["uv_build>=0.11.21,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "civicsense"
+module-root = ""
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu132", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cpu", marker = "sys_platform != 'linux'" },
+]
+torchvision = [
+    { index = "pytorch-cu132", marker = "sys_platform == 'linux'" },
+    { index = "pytorch-cpu", marker = "sys_platform != 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu132"
+url = "https://download.pytorch.org/whl/cu132"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.23.0",
+    "coverage>=7.3.0",
+    "ruff>=0.4.0",
+    "mypy>=1.8.0",
+]

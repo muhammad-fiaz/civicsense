@@ -1,0 +1,90 @@
+# CivicSense Detection Configuration
+# All thresholds, waste categories, and detection settings
+
+[detection]
+confidence = 0.15
+iou = 0.45
+image_size = 640
+device = "auto"
+
+[detection.models]
+detection = "yolo26n.pt"
+pose = "yolo26n-pose.pt"
+
+[detection.tracking]
+max_age = 30
+max_distance = 150.0
+min_hits = 1
+
+[detection.thresholds]
+hand_proximity = 80.0
+waste_fall_speed = 2.0
+waste_ground_y = 0.75
+dustbin_proximity = 100.0
+person_waste_distance = 200.0
+ground_object_distance = 250.0
+arm_raised_ratio = 0.25
+
+[detection.clip]
+# 10-second clip settings for flagged video segments
+duration_seconds = 10
+pre_event_seconds = 3
+post_event_seconds = 7
+
+[storage]
+# Root directories for output
+detected_dir = "detected"
+screenshots_dir = "detected/screenshots"
+clips_dir = "detected/clips"
+annotated_dir = "detected/annotated"
+evidence_dir = "detected/evidence"
+logs_dir = "logs"
+exports_dir = "exports"
+
+[logging]
+level = "INFO"
+rotation = "10 MB"
+retention = "7 days"
+compression = "gz"
+rich_tracebacks = true
+json_output = false
+
+# Waste categories - objects that count as potential litter/waste
+# These are COCO dataset classes that typically appear as trash
+[waste.categories]
+# Beverages & containers
+beverages = ["bottle", "wine glass", "cup"]
+
+# Food items (vegetarian)
+food_veg = ["banana", "apple", "orange", "broccoli", "carrot", "sandwich"]
+
+# Food items (non-vegetarian)
+food_nonveg = ["hot dog", "pizza", "donut", "cake"]
+
+# Food utensils
+utensils = ["fork", "knife", "spoon", "bowl"]
+
+# Personal items
+personal = ["backpack", "umbrella", "handbag", "suitcase"]
+
+# Electronics
+electronics = ["cell phone", "laptop", "tv", "mouse", "keyboard", "remote"]
+
+# Stationery & miscellaneous
+miscellaneous = ["book", "scissors", "teddy bear", "sports ball", "kite", "frisbee"]
+
+# Containers that could be dustbins
+dustbin_candidates = ["potted plant", "vase", "sink", "toilet"]
+
+# All waste classes combined (auto-generated from categories above)
+# This is computed at runtime by the config loader
+
+[reporting]
+# What to include in detection reports
+include_person_count = true
+include_waste_breakdown = true
+include_ground_objects = true
+include_dustbin_proximity = true
+include_hand_analysis = true
+include_timestamp = true
+include_screenshot = true

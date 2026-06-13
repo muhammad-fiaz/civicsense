@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[oc]
+*.pyd
+*.pyo
+build/
+dist/
+wheels/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Detection outputs (generated at runtime)
+detected/
+
+# Incident evidence
+incidents/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+.coverage.*
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+
+# ruff
+.ruff_cache/
+
+# ultralytics models (downloaded at runtime to weights/)
+weights/*.pt
+weights/*.onnx
+weights/*.tflite
+weights/*.engine
+weights/*.torchscript
+weights/*.mlpackage
+
+# Environment
+.env
+.env.local
+
+# Build artifacts
+*.whl
+*.tar.gz
