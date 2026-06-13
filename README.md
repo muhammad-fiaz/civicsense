@@ -46,6 +46,13 @@ CivicSense monitors video feeds in real-time and detects when people throw waste
 - **Structured logging** with Loguru (app, AI, database, error, audit logs)
 - **Three interface modes**: CLI, GUI (PySide6), and REST API (FastAPI)
 
+## Requirements
+
+- **Python 3.10 or later** — [Download Python](https://www.python.org/downloads/)
+- **UV package manager** — [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- Camera (for live detection)
+- GPU recommended (CUDA support via PyTorch)
+
 ## Quick Start
 
 ### Installation
@@ -217,13 +224,6 @@ CIVICSENSE_LOG_LEVEL=INFO
 CIVICSENSE_AI_DEVICE=auto
 CIVICSENSE_AI_CONFIDENCE_THRESHOLD=0.15
 ```
-
-## Requirements
-
-- **Python 3.10 or later** — [Download Python](https://www.python.org/downloads/)
-- **UV package manager** — [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
-- Camera (for live detection)
-- GPU recommended (CUDA support via PyTorch)
 
 ## License
 
