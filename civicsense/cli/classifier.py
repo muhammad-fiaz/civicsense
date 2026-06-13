@@ -16,7 +16,11 @@ import numpy as np
 from civicsense.ai.detector import YOLODetector
 from civicsense.ai.pose_detector import YOLOPoseDetector
 from civicsense.ai.tracker import ByteTracker
-from civicsense.config import get_dustbin_candidates, get_non_litter_classes, get_waste_classes
+from civicsense.config import (
+    get_dustbin_candidates,
+    get_non_litter_classes,
+    get_waste_classes,
+)
 from civicsense.core.config import get_config
 from civicsense.core.constants import (
     DUSTBIN_PROXIMITY_THRESHOLD,
@@ -213,7 +217,9 @@ def classify_frame(
             bbox = d.bbox
             aspect = bbox.width / max(bbox.height, 1)
             if 0.3 < aspect < 2.0 and bbox.area > 2000:
-                result.dustbins.append(DustbinInfo(d.class_name, d.bbox, d.confidence * 0.7))
+                result.dustbins.append(
+                    DustbinInfo(d.class_name, d.bbox, d.confidence * 0.7)
+                )
 
     # Identify all ground-level objects (any object near the bottom of frame)
     _identify_ground_objects(result, det_result, frame_height, ground_y)
@@ -377,13 +383,31 @@ def _identify_ground_objects(
 
 
 # Vehicle/infrastructure classes to ignore in ground litter analysis
-_VEHICLE_CLASSES = frozenset({
-    "car", "truck", "bus", "motorcycle", "bicycle", "train", "boat", "airplane",
-})
-_INFRA_CLASSES = frozenset({
-    "traffic light", "fire hydrant", "stop sign", "parking meter", "bench",
-    "street sign", "pole", "wall", "fence",
-})
+_VEHICLE_CLASSES = frozenset(
+    {
+        "car",
+        "truck",
+        "bus",
+        "motorcycle",
+        "bicycle",
+        "train",
+        "boat",
+        "airplane",
+    }
+)
+_INFRA_CLASSES = frozenset(
+    {
+        "traffic light",
+        "fire hydrant",
+        "stop sign",
+        "parking meter",
+        "bench",
+        "street sign",
+        "pole",
+        "wall",
+        "fence",
+    }
+)
 
 
 def _analyze_ground_litter(
@@ -443,10 +467,7 @@ def _analyze_ground_litter(
     # Detect contours (individual litter pieces)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # Filter small contours (noise) vs medium contours (litter)
-    litter_contours = [
-        c for c in contours
-        if 50 < cv2.contourArea(c) < 5000
-    ]
+    litter_contours = [c for c in contours if 50 < cv2.contourArea(c) < 5000]
 
     # Calculate ground clutter score
     # High edge ratio + high dark ratio + many contours = likely litter
@@ -770,11 +791,16 @@ def _format_waste_list(waste: list[WasteInfo]) -> str:
     names: dict[str, int] = {}
     for w in waste:
         names[w.class_name] = names.get(w.class_name, 0) + 1
-    parts = [f"{name}x{count}" if count > 1 else name for name, count in sorted(names.items())]
+    parts = [
+        f"{name}x{count}" if count > 1 else name
+        for name, count in sorted(names.items())
+    ]
     return ", ".join(parts) if parts else "unknown"
 
 
-def _format_object_list(objects: Sequence[GroundObject | WasteInfo | DustbinInfo]) -> str:
+def _format_object_list(
+    objects: Sequence[GroundObject | WasteInfo | DustbinInfo],
+) -> str:
     """Format a list of objects into a readable string.
 
     Args:
@@ -787,7 +813,10 @@ def _format_object_list(objects: Sequence[GroundObject | WasteInfo | DustbinInfo
     for obj in objects:
         name = obj.class_name
         names[name] = names.get(name, 0) + 1
-    parts = [f"{name}x{count}" if count > 1 else name for name, count in sorted(names.items())]
+    parts = [
+        f"{name}x{count}" if count > 1 else name
+        for name, count in sorted(names.items())
+    ]
     return ", ".join(parts) if parts else "unknown"
 
 

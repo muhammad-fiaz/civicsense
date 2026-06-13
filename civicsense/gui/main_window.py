@@ -468,8 +468,7 @@ class MainWindow(QMainWindow):
                 self._refresh_dashboard()
                 self._refresh_analytics()
                 logger.info(
-                    f"Incident created: id={created.id}, "
-                    f"type={event.waste_type}",
+                    f"Incident created: id={created.id}, type={event.waste_type}",
                     module="app",
                 )
             except Exception as e:

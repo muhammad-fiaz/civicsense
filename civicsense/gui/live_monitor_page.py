@@ -32,9 +32,7 @@ class VideoWidget(QLabel):
     def update_frame(self, frame: np.ndarray) -> None:
         h, w, ch = frame.shape
         rgb_frame = np.ascontiguousarray(frame[:, :, ::-1])
-        q_image = QImage(
-            rgb_frame.tobytes(), w, h, ch * w, QImage.Format.Format_RGB888
-        )
+        q_image = QImage(rgb_frame.tobytes(), w, h, ch * w, QImage.Format.Format_RGB888)
         pixmap = QPixmap.fromImage(q_image)
         scaled = pixmap.scaled(
             self.size(),
@@ -62,7 +60,9 @@ class InfoPanel(QWidget):
         layout.setSpacing(8)
 
         self._fps_label = QLabel("FPS: --")
-        self._fps_label.setStyleSheet("color: #00d4aa; font-size: 14px; font-weight: bold;")
+        self._fps_label.setStyleSheet(
+            "color: #00d4aa; font-size: 14px; font-weight: bold;"
+        )
         layout.addWidget(self._fps_label)
 
         self._persons_label = QLabel("Persons: 0")
@@ -299,6 +299,7 @@ class LiveMonitorPage(QWidget):
 
     def add_alert(self, message: str) -> None:
         from datetime import datetime
+
         timestamp = datetime.now().strftime("%H:%M:%S")
         self._alerts_text.append(f"[{timestamp}] {message}")
 
