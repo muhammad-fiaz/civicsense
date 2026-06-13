@@ -51,9 +51,11 @@ json_output = false
 
 # Waste categories - objects that count as potential litter/waste
 # These are COCO dataset classes that typically appear as trash
+# NOTE: COCO has 80 classes. "plastic bag", "bucket", "mug" are NOT in COCO.
+# The closest plastic waste classes are: bottle, cup, bowl, wine glass.
 [waste.categories]
-# Beverages & containers
-beverages = ["bottle", "wine glass", "cup"]
+# Plastics & beverages (most common litter)
+plastics = ["bottle", "cup", "wine glass", "bowl"]
 
 # Food items (vegetarian)
 food_veg = ["banana", "apple", "orange", "broccoli", "carrot", "sandwich"]
@@ -62,13 +64,10 @@ food_veg = ["banana", "apple", "orange", "broccoli", "carrot", "sandwich"]
 food_nonveg = ["hot dog", "pizza", "donut", "cake"]
 
 # Food utensils
-utensils = ["fork", "knife", "spoon", "bowl"]
+utensils = ["fork", "knife", "spoon"]
 
-# Personal items
-personal = ["backpack", "umbrella", "handbag", "suitcase"]
-
-# Electronics
-electronics = ["cell phone", "laptop", "tv", "mouse", "keyboard", "remote"]
+# Electronics (could be litter if abandoned)
+electronics = ["cell phone", "laptop", "mouse", "keyboard", "remote"]
 
 # Stationery & miscellaneous
 miscellaneous = ["book", "scissors", "teddy bear", "sports ball", "kite", "frisbee"]
@@ -76,8 +75,12 @@ miscellaneous = ["book", "scissors", "teddy bear", "sports ball", "kite", "frisb
 # Containers that could be dustbins
 dustbin_candidates = ["potted plant", "vase", "sink", "toilet"]
 
-# All waste classes combined (auto-generated from categories above)
-# This is computed at runtime by the config loader
+# NON-LITTER: personal items people carry (NOT waste/litter)
+# Excluded from waste detection to prevent false positives
+# personal = ["backpack", "umbrella", "handbag", "suitcase"]
+
+# NON-LITTER: large/vehicle objects that should never be flagged as litter
+non_litter = ["car", "truck", "bus", "motorcycle", "bicycle", "tie", "suitcase", "skateboard", "surfboard", "snowboard", "skis"]
 
 [reporting]
 # What to include in detection reports

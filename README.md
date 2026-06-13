@@ -20,6 +20,12 @@
 
 ---
 
+> [!WARNING]
+> **This is an experimental project built for educational and research purposes only.**
+> It is NOT production-ready and should NOT be used for real-world law enforcement, surveillance, or automated fines. Detection results may contain false positives/negatives. Always verify detections manually. Use responsibly and in compliance with local privacy laws.
+
+---
+
 ## Overview
 
 CivicSense monitors video feeds in real-time and detects when people throw waste onto the ground instead of disposing of it in a dustbin. Built with YOLO26 object detection, pose estimation, multi-object tracking, and comprehensive reporting.
@@ -30,7 +36,7 @@ CivicSense monitors video feeds in real-time and detects when people throw waste
 - **Human pose estimation** for hand-waste proximity analysis
 - **ByteTrack multi-object tracking** with stable IDs across frames
 - **Comprehensive ground object identification** - detects all waste types on the ground
-- **Detailed waste classification** - identifies bottles, cups, food wrappers, bags, and 30+ COCO classes
+- **Detailed waste classification** - identifies bottles, cups, food items, and other litter
 - **Incident management** with review workflow (pending/approved/rejected)
 - **Analytics dashboard** with daily, weekly, and monthly reports
 - **Evidence storage** - snapshots, annotated frames, video clips
@@ -95,29 +101,52 @@ uv run launch.py api --port 8000
 
 ## Detection Capabilities
 
+### Powered by YOLO26
+
+CivicSense uses **YOLO26** (You Only Look Once v26) — the latest real-time object detection model from Ultralytics — for identifying litter, waste objects, and persons in video frames. Combined with **YOLO26-Pose** for human pose estimation and **ByteTrack** for multi-object tracking.
+
+### Hand & Person Detection
+
+CivicSense always detects the **hand position** of every person, whether throwing plastic, bottles, snack packs, or any other waste:
+
+- **Full person detection** — detects complete persons with pose keypoints (wrists, elbows) for precise hand tracking
+- **Partial person detection** — detects hands/arms visible at frame edges (e.g., someone throwing from a car window)
+- **Estimated hand positions** — when pose data is unavailable, hand positions are estimated from the person's bounding box (65% height, at body sides)
+- **Hand-waste proximity** — dynamically scales detection reach based on person size; checks if waste overlaps with person bbox (being held)
+
 ### Waste Types Detected
 
-CivicSense identifies all COCO dataset classes that commonly appear as litter:
+CivicSense detects COCO dataset classes that commonly appear as litter. **Plastic waste** (bottles, cups) is a primary detection target:
 
-| Category | Objects |
-|----------|---------|
-| **Beverages** | bottle, wine glass, cup |
-| **Food** | banana, apple, sandwich, orange, broccoli, carrot, hot dog, pizza, donut, cake |
-| **Containers** | bowl, fork, knife, spoon |
-| **Personal Items** | backpack, umbrella, handbag, suitcase |
-| **Electronics** | cell phone |
-| **Miscellaneous** | book, scissors, teddy bear, sports ball, kite, frisbee |
-| **Potential Dustbins** | potted plant, vase, sink, toilet |
+| Category | Objects | Notes |
+|----------|---------|-------|
+| **Plastic & Beverages** | bottle, cup, wine glass, bowl | Primary plastic waste targets |
+| **Food** | banana, apple, sandwich, orange, broccoli, carrot, hot dog, pizza, donut, cake | Organic waste |
+| **Utensils** | fork, knife, spoon | Disposable utensils |
+| **Electronics** | cell phone, laptop, keyboard, mouse, remote | Abandoned electronics |
+| **Miscellaneous** | book, scissors, teddy bear, sports ball, kite, frisbee | Various litter |
+
+> **Note:** COCO's 80 classes do not include "plastic bag", "bucket", or "mug". The closest plastic waste classes are `bottle`, `cup`, `bowl`, and `wine glass`. For custom object detection (plastic bags, buckets), a custom-trained model would be required.
+
+**Excluded from detection** (not litter): backpack, handbag, umbrella, suitcase, car, truck, bus, motorcycle, bicycle, tie, skateboard.
 
 ### Classification Logic
 
 | Condition | Classification | Details |
 |-----------|---------------|---------|
-| Waste + near dustbin | VALID | Correctly disposed |
+| Waste near dustbin | VALID | Correctly disposed |
 | Waste in hand + throwing + no dustbin | FLAGGED | Active littering |
+| Waste in raised hand + no dustbin | FLAGGED | Arm raised littering |
+| Waste in hand + hand lowered + no dustbin | FLAGGED | Dropping litter |
 | Waste held + no dustbin | FLAGGED | Likely littering |
+| Waste in air near person + no dustbin | FLAGGED | Waste thrown |
+| Waste on ground near person + no dustbin | FLAGGED | Litter on ground |
 | Waste on ground + no dustbin | FLAGGED | Litter on ground |
+| Waste near person + no dustbin | FLAGGED | Suspicious waste placement |
+| Waste in air, no person | FLAGGED | Thrown waste (no person visible) |
+| Waste on ground, no person | GROUND LITTER | Pre-existing litter |
 | Throwing motion + dustbin not targeted | FLAGGED | Potential littering |
+| Ground objects near person + throwing | FLAGGED | Throwing near ground objects |
 | Ground objects near person | INCONCLUSIVE | Needs more context |
 | Ground litter, no person | GROUND LITTER | Pre-existing litter |
 

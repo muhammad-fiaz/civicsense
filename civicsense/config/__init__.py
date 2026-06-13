@@ -67,17 +67,30 @@ def get_nested_config(*keys: str, default: Any = None) -> Any:
     return current
 
 
+_WASTE_CATEGORY_KEYS = {
+    "plastics",
+    "food_veg",
+    "food_nonveg",
+    "utensils",
+    "electronics",
+    "miscellaneous",
+}
+
+
 def get_waste_classes() -> list[str]:
-    """Get all waste class names from the TOML config.
+    """Get litter waste class names from the TOML config.
+
+    Only returns classes from actual waste categories (food, drinks, etc.).
+    Excludes dustbin_candidates and non_litter to prevent false positives.
 
     Returns:
-        Flat list of all COCO class names that count as potential waste.
+        Flat list of COCO class names that count as potential litter.
     """
     config = _load_toml()
     categories = config.get("waste", {}).get("categories", {})
     waste_classes: list[str] = []
-    for category_classes in categories.values():
-        if isinstance(category_classes, list):
+    for key, category_classes in categories.items():
+        if key in _WASTE_CATEGORY_KEYS and isinstance(category_classes, list):
             waste_classes.extend(category_classes)
     return waste_classes
 
@@ -90,6 +103,16 @@ def get_dustbin_candidates() -> list[str]:
     """
     config = _load_toml()
     return config.get("waste", {}).get("categories", {}).get("dustbin_candidates", [])
+
+
+def get_non_litter_classes() -> list[str]:
+    """Get non-litter class names (personal items, vehicles, etc.).
+
+    Returns:
+        List of COCO class names that should NOT be flagged as litter.
+    """
+    config = _load_toml()
+    return config.get("waste", {}).get("categories", {}).get("non_litter", [])
 
 
 def get_waste_categories() -> dict[str, list[str]]:
